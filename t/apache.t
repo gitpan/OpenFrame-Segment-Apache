@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-use Test::More tests => 6;
+use Test::More tests => 9;
 
 use strict;
 no warnings 'once';
@@ -30,6 +30,14 @@ ok($response->is_success, "Should get successful response back");
 print $response->error_as_HTML unless $response->is_success;
 my $html = $response->content;
 ok($html, "Should get some HTML back");
+
+$url .= "redirect/";
+my $ua = LWP::UserAgent->new(cookie_jar => HTTP::Cookies->new());
+my $request = HTTP::Request->new('GET', $url);
+my $response = $ua->simple_request($request);
+ok($response, "Should get response back for $url");
+is($response->code, 302, "Should be redirect");
+is($response->headers->header('Location'), '/', "location is fine");
 
 # Kill the OpenFrame::Server::HTTP servers
 kill 2, $pid;

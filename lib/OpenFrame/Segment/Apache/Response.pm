@@ -17,7 +17,7 @@ use OpenFrame::Response;
 
 use base qw (Pipeline::Segment OpenFrame::Object);
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 sub dispatch {
   my $self  = shift;
@@ -58,28 +58,28 @@ sub ofr2httpr {
 
   my $request = Apache->request;
 
-    my %cookies = $cookies->get_all();
+  my %cookies = $cookies->get_all();
 
   foreach my $name (keys %cookies) {
     my $cookie = Apache::Cookie->new(
-				     Apache->request,
-				     -name => $name,
-				     -value => $cookies{$name},
-				     -expires => '+1M',
-				     -path    => '/',
-				    );
+      Apache->request,
+      -name    => $name,
+      -value   => $cookies{$name},
+      -expires => '+1M',
+      -path    => '/',
+    );
 
     Apache->request()->header_out(
-				  "Set-Cookie" => $cookie->as_string
-				 );
+      "Set-Cookie" => $cookie->as_string
+    );
   }
 
 
   my $status = $self->ofcode2status($ofr);
 
-  warn("[apache] ok") if $OpenFrame::DEBUG;
   $request->no_cache(1);
   $request->status($status);
+  $request->header_out("Location" => $ofr->message) if $status == REDIRECT;
   $request->send_http_header( $ofr->mimetype() || 'text/html' );
   $request->print( $ofr->message() );
 }
@@ -90,7 +90,7 @@ sub ofcode2status {
   if ($ofr->code() eq ofOK) {
     return RC_OK;
   } elsif ($ofr->code() eq ofREDIRECT) {
-    return RC_FOUND;
+    return REDIRECT;
   } else {
     return RC_INTERNAL_SERVER_ERROR;
   }

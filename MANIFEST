@@ -7,6 +7,7 @@ apache/conf/httpd.conf.default
 apache/conf/mime.types
 apache/logs/README
 lib/OpenFrame/Example/ApacheSimple.pm
+lib/OpenFrame/Example/Redirector.pm
 lib/OpenFrame/Segment/Apache.pm
 lib/OpenFrame/Segment/Apache/Request.pm
 lib/OpenFrame/Segment/Apache/Response.pm

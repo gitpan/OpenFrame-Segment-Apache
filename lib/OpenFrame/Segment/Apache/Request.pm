@@ -46,6 +46,7 @@ sub dispatch {
   my $r = Apache->request();
 
   my ($ofr, $cookies) = $self->req2ofr($r);
+  $self->emit("uri is " . $ofr->uri);
 
   if ($self->respond) {
     $self->emit("dispatched and responding");

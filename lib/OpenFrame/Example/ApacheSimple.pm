@@ -7,8 +7,11 @@ use Apache;
 use Apache::Constants qw(:response);
 use File::Spec::Functions qw(catfile);
 use Pipeline;
+use OpenFrame::Example::Redirector;
 use OpenFrame::Segment::Apache;
 use OpenFrame::Segment::ContentLoader;
+
+our $VERSION = '1.01';
 
 sub handler {
   my $r = shift;
@@ -17,18 +20,20 @@ sub handler {
 
   my $request = OpenFrame::Segment::Apache::Request->new();
   my $response = OpenFrame::Segment::Apache::Response->new();
+  my $redirect = OpenFrame::Example::Redirector->new();
   my $content = OpenFrame::Segment::ContentLoader->new()
     ->directory($dir);
 
   if ($r->dir_config('debug')) {
     # debugorama
     $request->debug(10);
+    $redirect->debug(10);
     $content->debug(10);
     $response->debug(10);
   }
 
   my $pipeline = Pipeline->new();
-  $pipeline->add_segment($request, $content);
+  $pipeline->add_segment($request, $redirect, $content);
   $pipeline->add_cleanup($response);
 
   my $store = Pipeline::Store::Simple->new();
