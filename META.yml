@@ -1,13 +1,13 @@
 --- #YAML:1.0
 name: OpenFrame-Segment-Apache
-version: 1.10
+version: 1.20
 license: perl
 distribution_type: module
 requires:
   Apache: 1.27
   HTTP::Cookies: 1.25
   LWP::UserAgent: 2.001
-  OpenFrame::AppKit: 3.03
+  OpenFrame: 3.04
   Test::More: 0.01
   URI: 1.21
 recommends: {}
@@ -21,7 +21,7 @@ provides:
     file: lib/OpenFrame/Example/Redirector.pm
   OpenFrame::Segment::Apache:
     file: lib/OpenFrame/Segment/Apache.pm
-    version: 1.10
+    version: 1.20
   OpenFrame::Segment::Apache::NoImages:
     file: lib/OpenFrame/Segment/Apache/NoImages.pm
     version: 1.01
@@ -31,4 +31,4 @@ provides:
   OpenFrame::Segment::Apache::Response:
     file: lib/OpenFrame/Segment/Apache/Response.pm
     version: 1.02
-generated_by: Module::Build version 0.19
+generated_by: Module::Build version 0.20

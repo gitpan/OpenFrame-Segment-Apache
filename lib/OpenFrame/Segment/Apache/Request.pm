@@ -99,7 +99,6 @@ sub req2args {
   my $r    = shift;
   my $ar = Apache::Request->new($r);
 
-  my %args;
   my $args = {
               map {
                    my $return;

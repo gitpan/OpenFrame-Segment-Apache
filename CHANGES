@@ -1,5 +1,8 @@
 Changelog for OpenFrame::Segment::Apache
 
+1.20 Wed Nov  5 14:09:44 GMT 2003
+	- require OpenFrame instead of OpenFrame::AppKit
+
 1.10 Wed Sep  3 15:00:54 BST 2003
 	- applied patch from Arthur Bergman to check for an Apache
           binary in the TEST_APACHE environment variable and to add
