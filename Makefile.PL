@@ -1,16 +1,15 @@
-use strict;
-use warnings;
-use ExtUtils::MakeMaker;
+    use ExtUtils::MakeMaker;
+    WriteMakefile
+      ('DISTNAME' => 'OpenFrame-Segment-Apache',
+       'VERSION' => '1.10',
+       'PL_FILES' => {},
+       'PREREQ_PM' => {
+			'Test::More' => '0.01',
+			'URI' => '1.21',
+			'LWP::UserAgent' => '2.001',
+			'OpenFrame::AppKit' => '3.03',
+			'HTTP::Cookies' => '1.25',
+			'Apache' => '1.27',
 
-WriteMakefile(
-  NAME         => "OpenFrame::Segment::Apache",
-  VERSION_FROM => "lib/OpenFrame/Segment/Apache.pm",
-  PREREQ_PM    => {
-    'Apache' => '1.27',
-    'OpenFrame::AppKit' => '1.00',
-    'LWP::UserAgent' => '2.001',
-    'HTTP::Cookies' => '1.25',
-    'URI' => '1.21',
-  },
-);
-
+		      },
+      );

@@ -13,7 +13,7 @@ use OpenFrame::Segment::Apache;
 use OpenFrame::Segment::Apache::NoImages;
 use OpenFrame::Segment::ContentLoader;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 sub handler {
   my $r = shift;
@@ -39,7 +39,7 @@ sub handler {
 
   my $pipeline = Pipeline->new();
   $pipeline->add_segment($request, $redirect, $noimages, $content);
-  $pipeline->add_cleanup($response);
+  $pipeline->cleanups->add_segment($response);
 
   my $store = Pipeline::Store::Simple->new();
   $pipeline->store($store->set($r));

@@ -10,8 +10,7 @@ use URI;
 
 ok(1, "loaded");
 
-my $perl = $Config{'perlpath'};
-$perl = $^X if $^O eq 'VMS';
+my $perl = $^X;
 
 my $pid = open(DAEMON, "$perl ./apache.pl |");
 die "Can't exec: $!" unless defined $pid;

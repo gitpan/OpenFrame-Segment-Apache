@@ -17,10 +17,13 @@ my $hostname = hostname;
 
 my $HTTPD;
 my @HTTPDS = (
-  "/usr/local/perlapache/bin/httpd",
+  "/usr/local/apache_perl/bin/httpd",
+  "../../../apache_perl/bin/httpd",
+  "../../apache_perl/bin/httpd",
   "/usr/local/apache/bin/httpd",
   "../../apache/bin/httpd",
   "../apache/bin/httpd",
+  $ENV{'TEST_APACHE'},
 );
 foreach (@HTTPDS) {
   next unless -f $_;
@@ -31,6 +34,7 @@ foreach (@HTTPDS) {
 if (not defined $HTTPD) {
   warn "This script failed to find an Apache binary\n";
   warn "Change \@HTTPDS in apache.pl to point to a working Apache binary.\n";
+  warn "Or define \$ENV{'TEST_APACHE'}.\n";
   exit;
 }
 
@@ -56,6 +60,7 @@ sleep 100 while 1; # sleep for a long time
 
 # When the user hits control-C we shut down the httpds we started up
 sub quit {
+  print "Killing apache...\n";
   open(IN, "$CWD/apache/logs/httpd.pid") || die $!;
   my $pid = <IN>;
   kill -2, $pid;
