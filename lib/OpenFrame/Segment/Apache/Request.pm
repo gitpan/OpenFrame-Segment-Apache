@@ -1,0 +1,157 @@
+package OpenFrame::Segment::Apache::Request;
+
+use strict;
+use warnings;
+
+use Apache;
+use Apache::Cookie;
+use Apache::Request;
+use Apache::Constants qw ( :response );
+use OpenFrame::Object;
+use OpenFrame::Cookies;
+use OpenFrame::Request;
+use OpenFrame::Segment::HTTP::Response;
+use Pipeline::Segment;
+use Scalar::Util qw ( blessed );
+use URI;
+
+our $VERSION = '1.00';
+
+use base qw(Pipeline::Segment OpenFrame::Object);
+
+sub init {
+  my $self = shift;
+  $self->emit("initialising");
+  $self->respond(1);
+  $self->SUPER::init( @_ );
+}
+
+sub respond {
+  my $self = shift;
+  my $respond = shift;
+  if (defined $respond) {
+    $self->{respond} = $respond;
+    return $self;
+  } else {
+    return $self->{respond};
+  }
+}
+
+sub dispatch {
+  my $self  = shift;
+  my $store = shift->store();
+
+  $self->emit("being dispatched");
+
+  my $r = Apache->request();
+
+  my ($ofr, $cookies) = $self->req2ofr($r);
+
+  if ($self->respond) {
+    $self->emit("dispatched and responding");
+    return ($ofr, $cookies, OpenFrame::Segment::HTTP::Response->new());
+  } else {
+    $self->emit("dispatched and not responding");
+    return ($ofr, $cookies);
+  }
+}
+
+##
+## turns an Apache::Request object into an OpenFrame::Request object
+##
+sub req2ofr {
+  my $self = shift;
+  my $r    = shift;
+  my $args = $self->req2args($r);
+  my $ctin = $self->req2ctin($r);
+
+  my $url = 'http://' . $r->hostname . ':' . $r->get_server_port . $r->uri;
+  my $uri = URI->new( $url );
+  $uri->path($r->uri());
+  $uri->host($r->hostname());
+  $uri->scheme('http');
+
+  my $ofr  = OpenFrame::Request->new()
+                               ->arguments($args)
+			       ->uri($uri);
+
+  return ($ofr,$ctin);
+}
+
+sub req2ctin {
+  my $self = shift;
+  my $r    = shift;
+  my $cookietin = OpenFrame::Cookies->new();
+
+  my $ar = Apache::Request->new($r);
+  my %apcookies  = Apache::Cookie->fetch();
+
+  foreach my $key (keys %apcookies) {
+    $cookietin->set($apcookies{$key}->name(), $apcookies{$key}->value());
+  }
+
+  return $cookietin;
+}
+
+sub req2args {
+  my $self = shift;
+  my $r    = shift;
+  my $ar = Apache::Request->new($r);
+
+  my %args;
+  my $args = {
+              map {
+                   my $return;
+                   my @results = $ar->param($_);
+                   if (scalar(@results) > 1) {
+                     $return = [@results];
+                   } else {
+                     $return = $results[0];
+                   }
+                   ($_, $return)
+                  } $ar->param()
+            };
+
+
+
+  foreach my $upload ( $ar->upload ) {
+    $args->{ $upload->name } = $upload->fh;
+  }
+
+  return $args;
+}
+
+1;
+
+__END__
+
+=head1 NAME
+
+OpenFrame::Segment::Apache::Request - Apache request segment
+
+=head1 SYNOPSIS
+
+  my $request = OpenFrame::Segment::Apache::Request->new();
+  my $pipeline = Pipeline->new();
+  $pipeline->add_segment($request);
+  # add more segments here
+
+=head1 DESCRIPTION
+
+The OpenFrame::Segment::Apache::Request slot distribution provides a
+segment for OpenFrame 3 that converts from Apache requests to
+OpenFrame::Request objects. It should be the first segment in the
+pipeline.
+
+=head1 AUTHOR
+
+Leon Brocard <acme@astray.com>
+
+=head1 COPYRIGHT
+
+Copyright 2002 Fotango Ltd.
+Licensed under the same terms as Perl itself.
+
+=cut
+
+
