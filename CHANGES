@@ -1,5 +1,10 @@
 Changelog for OpenFrame::Segment::Apache
 
+1.03 Thu Sep 26 16:27:48 BST 2002
+	- hmmm, a lot of releases today
+	- now use the new OpenFrame::Argument::Blob so that file
+	uploading works in the new OpenFrame way
+
 1.02 Thu Sep 26 15:28:13 BST 2002
 	- new OpenFrame::Segment::Apache::NoImages which lets Apache
 	serve images for us (and framework to make this work and tests

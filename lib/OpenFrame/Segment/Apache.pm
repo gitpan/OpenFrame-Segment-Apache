@@ -3,7 +3,7 @@ use strict;
 use OpenFrame::Segment::Apache::Request;
 use OpenFrame::Segment::Apache::Response;
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 1;
 

@@ -7,6 +7,7 @@ use Apache;
 use Apache::Cookie;
 use Apache::Request;
 use Apache::Constants qw ( :response );
+use OpenFrame::Argument::Blob;
 use OpenFrame::Object;
 use OpenFrame::Cookies;
 use OpenFrame::Request;
@@ -15,7 +16,7 @@ use Pipeline::Segment;
 use Scalar::Util qw ( blessed );
 use URI;
 
-our $VERSION = '1.00';
+our $VERSION = '1.02';
 
 use base qw(Pipeline::Segment OpenFrame::Object);
 
@@ -116,7 +117,14 @@ sub req2args {
 
 
   foreach my $upload ( $ar->upload ) {
-    $args->{ $upload->name } = $upload->fh;
+    my $name = $upload->name;
+    my $filename = $upload->filename;
+    my $fh = $upload->fh;
+    my $blob = OpenFrame::Argument::Blob->new();
+    $blob->name($name);
+    $blob->filehandle($fh);
+    $blob->filename($filename) if $filename;
+    $args->{$name} = $blob;
   }
 
   return $args;
