@@ -17,7 +17,7 @@ use OpenFrame::Response;
 
 use base qw (Pipeline::Segment OpenFrame::Object);
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 sub dispatch {
   my $self  = shift;
@@ -66,19 +66,18 @@ sub ofr2httpr {
   my %cookies = $cookies->get_all();
 
   foreach my $name (keys %cookies) {
+    my $value = $cookies{$name}->value;
     my $cookie = Apache::Cookie->new(
-      Apache->request,
+      $request,
       -name    => $name,
-      -value   => $cookies{$name},
+      -value   => $value,
       -expires => '+1M',
       -path    => '/',
     );
 
-    Apache->request()->header_out(
-      "Set-Cookie" => $cookie->as_string
-    );
+    my $as = $cookie->as_string;
+    $request->err_headers_out->add("Set-Cookie" => $as);
   }
-
 
   my $status = $self->ofcode2status($ofr);
 

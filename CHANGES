@@ -1,5 +1,8 @@
 Changelog for OpenFrame::Segment::Apache
 
+1.04 Fri Sep 27 13:04:20 BST 2002
+	- fix embarrassing bug where cookies weren't being sent properly
+
 1.03 Thu Sep 26 16:27:48 BST 2002
 	- hmmm, a lot of releases today
 	- now use the new OpenFrame::Argument::Blob so that file
