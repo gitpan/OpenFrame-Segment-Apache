@@ -3,7 +3,7 @@ use strict;
 use OpenFrame::Segment::Apache::Request;
 use OpenFrame::Segment::Apache::Response;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 1;
 
@@ -39,6 +39,9 @@ The actual handler is quite short. The important part is to set up a
 pipeline which has a OpenFrame::Segment::Apache::Request segment at
 the beginning and a OpenFrame::Segment::Apache::Response as a cleanup
 segment.
+
+Note that there is also a C<OpenFrame::Segment::Apache::NoImages> which
+declines and lets Apache serve images.
 
 =head1 AUTHOR
 

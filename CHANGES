@@ -1,5 +1,10 @@
 Changelog for OpenFrame::Segment::Apache
 
+1.02 Thu Sep 26 15:28:13 BST 2002
+	- new OpenFrame::Segment::Apache::NoImages which lets Apache
+	serve images for us (and framework to make this work and tests
+	to check it works)
+
 1.01 Wed Sep 25 16:32:14 BST 2002
 	- redirects now work (with tests)
 

@@ -276,7 +276,7 @@ ServerAdmin you@your.address
 # documents. By default, all requests are taken from this directory, but
 # symbolic links and aliases may be used to point to other locations.
 #
-DocumentRoot "@@CWD@@"
+DocumentRoot "@@CWD@@/webpages"
 
 #
 # Each directory to which Apache has access, can be configured with respect
@@ -301,7 +301,7 @@ DocumentRoot "@@CWD@@"
 #
 # This should be changed to whatever you set DocumentRoot to.
 #
-<Directory "@@CWD@@">
+<Directory "@@CWD@@/webpages">
 
 #
 # This may also be "None", "All", or any combination of "Indexes",

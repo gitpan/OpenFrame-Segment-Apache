@@ -22,7 +22,7 @@ use base qw(Pipeline::Segment OpenFrame::Object);
 sub init {
   my $self = shift;
   $self->emit("initialising");
-  $self->respond(1);
+  $self->respond(0);
   $self->SUPER::init( @_ );
 }
 

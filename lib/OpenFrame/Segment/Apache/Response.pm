@@ -23,7 +23,7 @@ sub dispatch {
   my $self  = shift;
   my $store = shift->store();
 
-  $self->emit("dispatching");
+  $self->emit("being dispatched");
 
   my $response;
 
@@ -42,6 +42,11 @@ sub dispatch {
 			}
 		      );
     $self->error("no response available");
+  }
+
+  if ($response->code == ofDECLINE) {
+    $self->emit("declining");
+    return;
   }
 
   return $self->ofr2httpr($response, $cookies);
@@ -87,9 +92,10 @@ sub ofr2httpr {
 sub ofcode2status {
   my $self = shift;
   my $ofr  = shift;
-  if ($ofr->code() eq ofOK) {
+  my $code = $ofr->code();
+  if ($code eq ofOK) {
     return RC_OK;
-  } elsif ($ofr->code() eq ofREDIRECT) {
+  } elsif ($code eq ofREDIRECT) {
     return REDIRECT;
   } else {
     return RC_INTERNAL_SERVER_ERROR;
