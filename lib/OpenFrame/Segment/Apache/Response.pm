@@ -34,7 +34,7 @@ sub dispatch {
     $self->emit("no response, making an error");
     ## time to make an error response
     $response = OpenFrame::Response->new();
-    $response->code(ofERROR);
+    $response->code(ofERROR());
     $response->message(
 		       q{
 			 <h1>There was an error processing your request</h1>
@@ -44,7 +44,7 @@ sub dispatch {
     $self->error("no response available");
   }
 
-  if ($response->code == ofDECLINE) {
+  if ($response->code == ofDECLINE()) {
     $self->emit("declining");
     return;
   }
@@ -67,16 +67,7 @@ sub ofr2httpr {
 
   foreach my $name (keys %cookies) {
     my $value = $cookies{$name}->value;
-    my $cookie = Apache::Cookie->new(
-      $request,
-      -name    => $name,
-      -value   => $value,
-      -expires => '+1M',
-      -path    => '/',
-    );
-
-    my $as = $cookie->as_string;
-    $request->err_headers_out->add("Set-Cookie" => $as);
+    $request->err_headers_out->add("Set-Cookie" => $cookies{$name});
   }
 
   my $status = $self->ofcode2status($ofr);
@@ -92,9 +83,9 @@ sub ofcode2status {
   my $self = shift;
   my $ofr  = shift;
   my $code = $ofr->code();
-  if ($code eq ofOK) {
+  if ($code eq ofOK()) {
     return RC_OK;
-  } elsif ($code eq ofREDIRECT) {
+  } elsif ($code eq ofREDIRECT()) {
     return REDIRECT;
   } else {
     return RC_INTERNAL_SERVER_ERROR;

@@ -1,5 +1,12 @@
 Changelog for OpenFrame::Segment::Apache
 
+1.05 Thu Dec 19 15:43:55 GMT 2002
+	- minor code cleanup
+	- cookies are now stringified rather than extracted, so the
+	  programmer retains control over them
+	- use the request scheme rather than blindly assuming HTTP
+          (HTTPS should now work properly)
+
 1.04 Fri Sep 27 13:04:20 BST 2002
 	- fix embarrassing bug where cookies weren't being sent properly
 

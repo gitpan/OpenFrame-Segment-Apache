@@ -7,6 +7,7 @@ use Apache;
 use Apache::Cookie;
 use Apache::Request;
 use Apache::Constants qw ( :response );
+use Apache::URI;
 use OpenFrame::Argument::Blob;
 use OpenFrame::Object;
 use OpenFrame::Cookies;
@@ -67,11 +68,9 @@ sub req2ofr {
   my $args = $self->req2args($r);
   my $ctin = $self->req2ctin($r);
 
-  my $url = 'http://' . $r->hostname . ':' . $r->get_server_port . $r->uri;
-  my $uri = URI->new( $url );
-  $uri->path($r->uri());
-  $uri->host($r->hostname());
-  $uri->scheme('http');
+  # hmmm, unfortunately Apache doesn't support $r->scheme so
+  # we have to use Apache::URI
+  my $uri = URI->new(Apache::URI->parse($r)->unparse);
 
   my $ofr  = OpenFrame::Request->new()
                                ->arguments($args)

@@ -10,7 +10,7 @@ use Pipeline::Segment;
 use OpenFrame::Response;
 use base qw(Pipeline::Segment);
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 sub directory {
   my $self = shift;
@@ -33,9 +33,7 @@ sub dispatch {
     $self->emit("no OpenFrame::Request available in store");
     return undef;
   }
-
   my $path = $ofr->uri->path();
-
   # add the images directory
   my ($volume, $dirs, $file) = File::Spec->splitpath( $path );
   my $realfile = File::Spec->catfile( $self->directory, $dirs, $file );
@@ -47,14 +45,12 @@ sub dispatch {
 
   my $mm = File::MMagic->new();
   my $type = $mm->checktype_filename($realfile);
-  $self->emit("found type: $type");
-
   return unless $type =~ /^image/ || $file =~ /swf$/;
 
   $self->emit("declining image");
 
   my $response = OpenFrame::Response->new();
-  $response->code(ofDECLINE);
+  $response->code(ofDECLINE());
   $response->message("let apache take care of it");
   $response->mimetype($type);
   return $response;

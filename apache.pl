@@ -2,7 +2,7 @@
 
 use strict;
 use lib 'lib';
-use lib '../openframe2/lib';
+use lib '../openframe3/lib';
 use lib '../Vx/lib';
 use Cwd;
 use OpenFrame;
